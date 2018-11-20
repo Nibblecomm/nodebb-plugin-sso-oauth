@@ -49,8 +49,8 @@
 	 */
 
 	var constants = Object.freeze({
-			type: '',	// Either 'oauth' or 'oauth2'
-			name: '',	// Something unique to your OAuth provider in lowercase, like "github", or "nodebb"
+			type: 'oauth2',	// Either 'oauth' or 'oauth2'
+			name: 'spotipocloud',	// Something unique to your OAuth provider in lowercase, like "github", or "nodebb"
 			oauth: {
 				requestTokenURL: '',
 				accessTokenURL: '',
@@ -59,12 +59,12 @@
 				consumerSecret: nconf.get('oauth:secret'),	// don't change this line
 			},
 			oauth2: {
-				authorizationURL: '',
-				tokenURL: '',
+				authorizationURL: 'https://cloud.spotipo.com/oauth2/authorize',
+				tokenURL: 'https://cloud.spotipo.com/oauth2/token',
 				clientID: nconf.get('oauth:id'),	// don't change this line
 				clientSecret: nconf.get('oauth:secret'),	// don't change this line
 			},
-			userRoute: ''	// This is the address to your app's "user profile" API endpoint (expects JSON)
+			userRoute: 'https://cloud.spotipo.com/oauth2/profile'	// This is the address to your app's "user profile" API endpoint (expects JSON)
 		}),
 		configOk = false,
 		OAuth = {}, passportOAuth, opts;
@@ -134,9 +134,9 @@
 			passport.use(constants.name, new passportOAuth(opts, function(req, token, secret, profile, done) {
 				OAuth.login({
 					oAuthid: profile.id,
-					handle: profile.displayName,
-					email: profile.emails[0].value,
-					isAdmin: profile.isAdmin
+					handle: profile.displayname,
+					email: profile.email,
+					isAdmin: profile.is_admin
 				}, function(err, user) {
 					if (err) {
 						return done(err);
